@@ -43,7 +43,7 @@ int main() {
         int i=0;
         scanf("%d",&i);
 
-        printf("下面运行 %s:\n%s\n\n",func_table[i]->name,func_table[i]->descip);
+        printf("\n下面运行\n%s:\n%s\n\n",func_table[i]->name,func_table[i]->descip);
         if(i==0)
             exit(0);
         printf("----------------------运行开始------------------------\n");
