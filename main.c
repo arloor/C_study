@@ -45,6 +45,8 @@ int main() {
 
         int i=0;
         scanf("%d",&i);
+        char ch;
+        while ((ch = getchar()) != '\n' && ch != EOF);//清空缓冲区的一般方法（最好方法）
 
         printf("\n下面运行\n%s:\n%s\n\n",func_table[i]->name,func_table[i]->descip);
         if(i==0)
