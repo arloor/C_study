@@ -3,5 +3,5 @@ project(C_study)
 
 set(CMAKE_C_STANDARD 11)
 
-set(SOURCE_FILES main.c memory_alloc.c memory_alloc.h static_var_use.c static_var_use.h)
+set(SOURCE_FILES main.c memory_alloc.c memory_alloc.h static_var_use.c static_var_use.h fget_read_line_from_stream.c fget_read_line_from_stream.h)
 add_executable(C_study ${SOURCE_FILES})

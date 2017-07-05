@@ -2,6 +2,7 @@
 
 #include "memory_alloc.h"
 #include "static_var_use.h"
+#include "fget_read_line_from_stream.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -9,8 +10,8 @@ int main() {
 
     struct func{
         void (*f)();//函数指针
-        char name[20];//函数名
-        char descip[150];//函数描述
+        char name[50];//函数名
+        char descip[250];//函数描述
     };
 
     //todo:每完成一个函数，请在此添加函数的结构体，参见上方定义
@@ -18,16 +19,18 @@ int main() {
     /*
      struct func exit_while={NULL,"exit","退出程序的运行"};
      */
-
+    //
     struct func exit_while={NULL,"exit","退出程序的运行"};
     struct func memory_alloc_func={memory_alloc,"memory_alloc","分配内存——calloc和realloc的使用"};
     struct func use_static_func={use_static_function,"use_static_function","使用静态变量的例子"};
+    struct func fget_read_line_from_stream_func={fget_read_line_from_stream,"fget_read_line_from_stream","从文件流（标准输入）读取输入"};
 
 
     struct func func_table[][20]={
             {exit_while},
             {memory_alloc_func},
-            {use_static_func}
+            {use_static_func},
+            {fget_read_line_from_stream_func}
     };
 
 
