@@ -2,7 +2,7 @@
 // Created by arloor on 17-7-5.
 //
 
-#include "static_var_use.h"
+#include "header/static_var_use.h"
 #include <stdio.h>
 
 void test();

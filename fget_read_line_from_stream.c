@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "fget_read_line_from_stream.h"
+#include "header/fget_read_line_from_stream.h"
 
 /**
  * 主要使用
@@ -20,8 +20,8 @@
  * @return
  */
 void fget_read_line_from_stream(){
-    int size = 10;//看看有什么被不同
-    //int size=1024;
+    //int size = 10;//看看有什么不同,这种情况就是所说的size不够大，也就是消耗不完缓冲区，需要清空的情况
+    int size=1024;
     //注意声明了指针也要申请空间，不然根本就没用
     //char* buff = NULL;错误
     char* buff =(char*)malloc(size);//这个malloc很重要

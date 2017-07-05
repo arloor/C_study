@@ -4,7 +4,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "memory_alloc.h"
+#include "header/memory_alloc.h"
 
 
 void memory_alloc(){

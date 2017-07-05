@@ -1,8 +1,8 @@
 
 
-#include "memory_alloc.h"
-#include "static_var_use.h"
-#include "fget_read_line_from_stream.h"
+#include "header/memory_alloc.h"
+#include "header/static_var_use.h"
+#include "header/fget_read_line_from_stream.h"
 #include <stdio.h>
 #include <stdlib.h>
 
