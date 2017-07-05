@@ -21,7 +21,7 @@ void memory_alloc(){
         printf("分配成功\n");
         for(int i=0;i<former_len;i++){
             *(ptr+i)=i;
-            printf("%d\n",ptr[i]);
+            printf("%d\n", *(ptr + i));//*(ptr+i)=ptr[i]
         }
     }else{
         printf("calloc失败，退出此函数");
