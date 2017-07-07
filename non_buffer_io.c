@@ -145,9 +145,31 @@ void non_buff_io() {
     //发现95-115为' ',这就是读失败的原因。
     //另外发现如果write的内容中有'\0',同样会截断写。代码就不体现了。
     //这很正常，因为'\0'结束字符串嘛。
+    //更新：后来发现，这种超过文件长度之后再写造成的连续'\0'被称为空洞
+    //
+    //至于原子性操作pread，pwrite并没有用代码体现，现在总结如下\n");
+    //ssize_t pread(int fd,void *buf,size_t nbytes,off_t offest);\n");
+    //ssize_t pwrite(int fd,void *buf,size_t nbytes,off_t offest);\n");
+    //原子性的定位然后IO:无法中断定位和读写，不会因为别的线程改变了偏移量而错误\n");
+    //读和写不改变偏移量\n");
+    //
+    //另外，apue上谈到O_APEEND这个标记并不是简单地定位到文件末尾然后再读写\n");
+    //O_APPEND的读写过程也是原子性的，就是定位和读写不可中断\n");
     printf("//发现95-115为'\\0',这就是读失败的原因。\n");
     printf("//另外发现如果write的内容中有'\\0',同样会截断写。代码就不体现了。\n");
     printf("//这很正常，因为'\\0'结束字符串嘛。\n至此，研究结束\n");
+    printf("//更新：后来发现，这种超过文件长度之后再写造成的连续'\\0'被称为空洞\n");
+    printf("\n");
+    printf("//至于原子性操作pread，pwrite并没有用代码体现，现在总结如下\n");
+    printf("//ssize_t pread(int fd,void *buf,size_t nbytes,off_t offest);\n");
+    printf("//ssize_t pwrite(int fd,void *buf,size_t nbytes,off_t offest);\n");
+    printf("//原子性的定位然后IO:无法中断定位和读写，不会因为别的线程改变了偏移量而错误\n");
+    printf("//读和写不改变偏移量\n");
+    printf("\n");
+    printf("//另外，apue上谈到O_APEEND这个标记并不是简单地定位到文件末尾然后再读写\n");
+    printf("//O_APPEND的读写过程也是原子性的，就是定位和读写不可中断\n");
+    printf("\n");
+
 
 
     //-----------------------关闭---------------------------------

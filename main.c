@@ -1,5 +1,3 @@
-
-
 #include "header/memory_alloc.h"
 #include "header/static_var_use.h"
 #include "header/fget_read_line_from_stream.h"
