@@ -3,6 +3,7 @@
 #include "header/fget_read_line_from_stream.h"
 #include "header/pointer.h"
 #include "header/non_buffer_io.h"
+#include "header/std_io.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -28,6 +29,7 @@ int main() {
                                                    "从标准输入读取输入"};
     struct func pointer_func = {pointer, "pointer", "指针的实例：引用字符和字符串并打印"};
     struct func non_buff_io_func = {non_buff_io, "non_buff_io", "不带缓冲的IO：open read close......"};
+    struct func std_io_func = {std_io, "std_io", "标准IO的实例"};
 
     struct func func_table[][20]={
             {exit_while},
@@ -35,7 +37,8 @@ int main() {
             {use_static_func},
             {fget_read_line_from_stream_func},
             {pointer_func},
-            {non_buff_io_func}
+            {non_buff_io_func},
+            {std_io_func}
     };
 
 
@@ -50,7 +53,7 @@ int main() {
 
         int i=0;
         scanf("%d",&i);
-        char ch;
+        int ch;//一定要是int 因为EOF是-1
         while ((ch = getchar()) != '\n' && ch != EOF);//清空缓冲区的一般方法（最好方法）
 
         printf("\n下面运行\n%s:\n%s", func_table[i]->name, func_table[i]->descip);

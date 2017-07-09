@@ -36,7 +36,7 @@ void fget_read_line_from_stream(){
         if(i>5){
             //！！！当超过计数5时。清空缓冲区，不然下面会出问题：直接退出了
             //总结：需要清空缓冲区的情况：没有消耗完缓冲区，然而以后的指令还需要读缓冲区
-            char ch;
+            int ch;//一定要是int 因为EOF是-1
             while((ch = getchar()) != '\n' && ch != EOF);//清空缓冲区的一般方法（最好方法）
             return;
         }
