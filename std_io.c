@@ -162,5 +162,6 @@ void std_io() {
     //所有输入被丢弃，所有输出被刷新。系统自动分配的缓冲区被释放（自己定义的缓冲区需要自己free）
     //当exit或者main返回时，所有流会被系统关闭。
     fclose(fp);
+    free(buff);
     return;
 }

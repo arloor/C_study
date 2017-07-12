@@ -4,14 +4,18 @@
 #include "header/pointer.h"
 #include "header/non_buffer_io.h"
 #include "header/std_io.h"
+#include "header/thread1_prac1.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#define MAX_FUNC_NUM 100//定义最多有100个函数
+#define MAX_FUNC_NAME_LENGTH 28//定义函数名最长
 
 int main() {
 
     struct func{
         void (*f)();//函数指针
-        char name[50];//函数名
+        char name[MAX_FUNC_NAME_LENGTH];//函数名
         char descip[250];//函数描述
     };
 
@@ -20,6 +24,7 @@ int main() {
     /*
      struct func new={NULL,"exit","退出程序的运行"};
      void non_buff_io()
+     thread_prac1
      */
 
     struct func exit_while={NULL,"exit","退出程序的运行"};
@@ -30,15 +35,17 @@ int main() {
     struct func pointer_func = {pointer, "pointer", "指针的实例：引用字符和字符串并打印"};
     struct func non_buff_io_func = {non_buff_io, "non_buff_io", "不带缓冲的IO：open read close......"};
     struct func std_io_func = {std_io, "std_io", "标准IO的实例"};
+    struct func thread_prac1_func = {thread_prac1, "thread_prac1", "线程的创建 退出 连接"};
 
-    struct func func_table[][20]={
+    struct func func_table[][MAX_FUNC_NUM] = {
             {exit_while},
             {memory_alloc_func},
             {use_static_func},
             {fget_read_line_from_stream_func},
             {pointer_func},
             {non_buff_io_func},
-            {std_io_func}
+            {std_io_func},
+            {thread_prac1_func}
     };
 
 
@@ -46,29 +53,35 @@ int main() {
     //--------------------------------------------------------------
     while(1){
         printf("函数列表如下：\n");//取名时函数名限制长度为20
+
         for(int i=0;i<sizeof(func_table)/sizeof(func_table[0]);i++){
-            printf("%d: %s\t\t%s\n",i,func_table[i]->name,func_table[i]->descip);
+            printf("%d: %-25s\t\t%s\n", i, func_table[i]->name, func_table[i]->descip);
         }
         printf("请输入要运行的函数编号：\n");
 
         int i=0;
         scanf("%d",&i);
+
+
+        if (i < (unsigned) sizeof(func_table) / sizeof(struct func) / MAX_FUNC_NUM) {//
+            printf("\n下面运行\n%s:\n%s", func_table[i]->name, func_table[i]->descip);
+            if (i == 0) {
+                exit(0);
+            }
+            printf("\n\n");
+
+            printf("----------------------运行开始------------------------\n");
+
+            void (*function)();
+
+
+            function = func_table[i]->f;
+            function();
+            printf("----------------------运行结束------------------------\n");
+            printf("\n继续选择函数\n");
+        } else printf("\n请输入正确的函数编号\n");
         int ch;//一定要是int 因为EOF是-1
-        while ((ch = getchar()) != '\n' && ch != EOF);//清空缓冲区的一般方法（最好方法）
-
-        printf("\n下面运行\n%s:\n%s", func_table[i]->name, func_table[i]->descip);
-        if (i == 0) {
-            exit(0);
-        }
-        printf("\n\n");
-        printf("----------------------运行开始------------------------\n");
-
-        void (*function)();
-
-        function=func_table[i]->f;
-        function();
-        printf("----------------------运行结束------------------------\n");
-        printf("\n继续选择函数\n");
+        while ((ch = getchar()) != '\n' && ch != EOF);//清空缓冲区的一般方法（最好方法）,以免影响等会的scanf
     }
 }
 
