@@ -53,6 +53,8 @@ void thread_prac1() {
     pthread_create(&id2, NULL, thread2, NULL);
     pthread_join(id2, &rval_ptr);//rval_ptr保存线程2的退出码
     printf("\n线程id2的退出码为：%d\n", rval_ptr);
+
+    //sleep(10);//上面使用了join的方式;如果不使用join，为了保证两个子线程能执行完，主线程需要sleep一段时间。
     return;
 }
 
