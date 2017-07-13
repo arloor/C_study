@@ -31,6 +31,19 @@
  * 删除线程清理程序——void pthread_cleanup_pop(int execute);如果execute为0,则清理程序弹出时不执行，否则弹出时执行。
  * 上面的两个函数必须·配对使用，push的宏实现中包含一个{，pop包含一个}
  * 线程清理程序的执行是与注册顺序相反的
+ *
+ *
+ * 互斥量相关：
+ * 互斥量静态初始化：pthread_mutex_t mutex=PTHREAD_MUTEX_INITIALIZER;
+ * 互斥量动态初始化：int pthread_mutex_init(pthread_mutext_t *restict mutex,
+ *                                          const pthread_mutexattr_t attr);
+ *                                          使用默认的互斥量属性时，attr设为NULL
+ * 互斥量清除：int pthread_mutex_destroy(pthread_mutex_t *mutex);
+ *
+ * 对互斥量加锁：int pthread_mutex_lock(pthread_mutex_t *mutex);
+ * 对互斥量解锁：int pthread_mutex_unlock(pthread_mutex_t *mutex);
+ * 尝试加锁（加锁失败不会被阻塞，但是会返回EBUSY）：int pthread_mutex_trylock(pthread_mutex_t *mutex);
+ *
  * @return
  */
 void *thread1(void *arg);
@@ -42,18 +55,32 @@ void th2_cleanup(void *arg);
 pthread_t id1;
 pthread_t id2;//作为全局比较好，因为所有线程都可能需要访问吧
 
+static int count = 0;//计数器，两个线程都将使用
+//为了保护这个临界区，使用互斥量保护
+pthread_mutex_t mutex;//=PTHREAD_MUTEX_INITIALIZER;//静态进行初始化。这里需要进行动态的初始化
+
 void thread_prac1() {
+    count = 1;
+
+    pthread_mutex_init(&mutex, NULL);//创建锁
 
     void *rval_ptr;//用来保存线程退出状态
 
     //创建线程——int pthread_create(pthread_t *tidp,const pthread_attr_t *attr);
     //这里的线程属性，而线程的参数都被设为了NULL
     //关于线程属性，请看thread_prac2
+    printf("开启两个线程，共享计数器（临界区）,使用互斥量来保护计数器\n");
     pthread_create(&id1, NULL, thread1, NULL);
     pthread_create(&id2, NULL, thread2, NULL);
     pthread_join(id2, &rval_ptr);//rval_ptr保存线程2的退出码
-    printf("\n线程id2的退出码为：%d\n", rval_ptr);
+    printf("线程id2的退出码为：%d\n", rval_ptr);
 
+    pthread_cancel(id1);//取消线程1
+    printf("\t主线程取消线程1\n");
+    fflush(stdout);
+    //为了互斥量不出错，尽量在主线程取消其他线程，不要子线程取消子线程。
+
+    pthread_mutex_destroy(&mutex);//清除锁
     //sleep(10);//上面使用了join的方式;如果不使用join，为了保证两个子线程能执行完，主线程需要sleep一段时间。
     return;
 }
@@ -62,8 +89,12 @@ void thread_prac1() {
 void *thread1(void *arg) {
     //printf("%lu\n",(unsigned long)pthread_self());//打印线程编号
     for (;;) {
-        printf("线程1正在运行111111111\n");
-        sleep(1);
+        pthread_mutex_lock(&mutex);
+        printf("线程1正在运行，当前计数器为：%d\n", count++);
+        fflush(stdout);
+        pthread_mutex_unlock(&mutex);
+        sleep(1);//注意：两个线程的sleep都放在锁外，否则会造成两个线程的执行数量不一致：
+        //因为在锁内sleep，sleep的时间还持有锁
     }
 }
 
@@ -73,16 +104,19 @@ void *thread2(void *arg) {
     pthread_cleanup_push(th2_cleanup, NULL) ;//与下面pop的配对
             int i = 0;
             for (;;) {
-                printf("线程2正在运行2222222222222222222222222222222\n");
-                sleep(1);
+                pthread_mutex_lock(&mutex);
+                printf("线程2正在运行，当前计数器为：%d\n", count++);
+                fflush(stdout);
+                //pthread_mutex_unlock(&mutex);//解锁放在这个位置不对，思考如下：
+                //下面有取消线程1的操作
+                //线程1被取消了，线程1的解锁操作就没有办法进行了，所以存在死锁（线程2一直等待着线程1解锁呢）
                 i++;
-                if (i == 3) {
-                    pthread_cancel(id1);//取消线程1
-                    printf("\t线程1被线程2取消\n");
-                }
+                pthread_mutex_unlock(&mutex);//解锁放在这才对
                 if (i == 6) {
                     pthread_exit((void *) 2);//线程2退出
                 }
+                sleep(1);//注意：两个线程的sleep都放在锁外，否则会造成两个线程的执行数量不一致：
+                //因为在锁内sleep，sleep的时间还持有锁
             }
             //与上面的push配对,执行线程清理程序
     pthread_cleanup_pop(1);//尽管这条命令在线程退出之后，但是能够被调用到
@@ -90,4 +124,5 @@ void *thread2(void *arg) {
 
 void th2_cleanup(void *arg) {
     printf("\t线程2使用pthread_exit退出\n");
+    fflush(stdout);
 }
