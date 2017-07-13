@@ -36,7 +36,7 @@ int main() {
     struct func pointer_func = {pointer, "pointer", "指针的实例：引用字符和字符串并打印"};
     struct func non_buff_io_func = {non_buff_io, "non_buff_io", "不带缓冲的IO：open read close......"};
     struct func std_io_func = {std_io, "std_io", "标准IO的实例"};
-    struct func thread_prac1_func = {thread_prac1, "thread_prac1", "线程的创建 退出 连接 使用互斥量"};
+    struct func thread_prac1_func = {thread_prac1, "thread_prac1", "线程的创建 退出 连接 线程清理程序（清除锁） 使用互斥量"};
     struct func thread_prac2_rwlock_func = {thread_prac2_rwlock, "thread_prac2_rwlock", "线程：读写锁的实践"};
 
     struct func func_table[][MAX_FUNC_NUM] = {

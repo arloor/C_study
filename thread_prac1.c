@@ -50,7 +50,9 @@ void *thread1(void *arg);
 
 void *thread2(void *arg);
 
-void th2_cleanup(void *arg);
+static void th2_cleanup(void *arg);
+
+static void mutex_clean(void *mutex);
 
 pthread_t id1;
 pthread_t id2;//作为全局比较好，因为所有线程都可能需要访问吧
@@ -75,10 +77,6 @@ void thread_prac1() {
     pthread_join(id2, &rval_ptr);//rval_ptr保存线程2的退出码
     printf("线程id2的退出码为：%d\n", rval_ptr);
 
-    pthread_cancel(id1);//取消线程1
-    printf("\t主线程取消线程1\n");
-    fflush(stdout);
-    //为了互斥量不出错，尽量在主线程取消其他线程，不要子线程取消子线程。
 
     pthread_mutex_destroy(&mutex);//清除锁
     //sleep(10);//上面使用了join的方式;如果不使用join，为了保证两个子线程能执行完，主线程需要sleep一段时间。
@@ -88,15 +86,26 @@ void thread_prac1() {
 
 void *thread1(void *arg) {
     //printf("%lu\n",(unsigned long)pthread_self());//打印线程编号
-    for (;;) {
-        pthread_mutex_lock(&mutex);
-        printf("线程1正在运行，当前计数器为：%d\n", count++);
-        fflush(stdout);
-        pthread_mutex_unlock(&mutex);
-        sleep(1);//注意：两个线程的sleep都放在锁外，否则会造成两个线程的执行数量不一致：
-        //因为在锁内sleep，sleep的时间还持有锁
-    }
+
+    //很必要，因为存在因线程被取消，有的锁没有被解开造成死锁的情况
+    pthread_cleanup_push(mutex_clean, &mutex) ;
+            for (;;) {
+                pthread_mutex_lock(&mutex);
+                printf("线程1正在运行，当前计数器为：%d\n", count++);
+                fflush(stdout);
+                pthread_mutex_unlock(&mutex);
+                sleep(1);//注意：两个线程的sleep都放在锁外，否则会造成两个线程的执行数量不一致：
+                //因为在锁内sleep，sleep的时间还持有锁
+            }
+    pthread_cleanup_pop(1);
 }
+
+//清除因线程取消而没有解开的锁
+void mutex_clean(void *mutex) {
+    printf("\t清除未被取消的锁(重要)\n");
+    pthread_mutex_unlock((pthread_mutex_t *) mutex);
+}
+
 
 void *thread2(void *arg) {
     //printf("%lu\n",(unsigned long)pthread_self());//打印线程编号
@@ -111,6 +120,13 @@ void *thread2(void *arg) {
                 //下面有取消线程1的操作
                 //线程1被取消了，线程1的解锁操作就没有办法进行了，所以存在死锁（线程2一直等待着线程1解锁呢）
                 i++;
+                if (i == 3) {
+                    pthread_cancel(id1);//取消线程1
+                    printf("\t线程2取消线程1\n");
+                    fflush(stdout);
+                    //注意，这里取消了线程1,但是可能存在线程1退出时，锁未解开的情况
+                    //所以线程1必须添加线程清理程序，解开锁
+                }
                 pthread_mutex_unlock(&mutex);//解锁放在这才对
                 if (i == 6) {
                     pthread_exit((void *) 2);//线程2退出
