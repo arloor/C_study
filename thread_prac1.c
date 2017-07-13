@@ -2,7 +2,7 @@
 // Created by arloor on 17-7-12.
 //
 
-#include "header/thread1_prac1.h"
+#include "header/thread_prac1.h"
 #include<stdio.h>
 #include <pthread.h>
 #include <unistd.h>

@@ -4,7 +4,7 @@
 #include "header/pointer.h"
 #include "header/non_buffer_io.h"
 #include "header/std_io.h"
-#include "header/thread1_prac1.h"
+#include "header/thread_prac1.h"
 #include "header/thread_prac2_rwlock.h"
 #include <stdio.h>
 #include <stdlib.h>
