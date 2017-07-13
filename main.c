@@ -5,6 +5,7 @@
 #include "header/non_buffer_io.h"
 #include "header/std_io.h"
 #include "header/thread1_prac1.h"
+#include "header/thread_prac2_rwlock.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -24,6 +25,7 @@ int main() {
     /*
      struct func new={NULL,"exit","退出程序的运行"};
      void non_buff_io()
+     void thread_prac2_rwlock()
      */
 
     struct func exit_while={NULL,"exit","退出程序的运行"};
@@ -35,6 +37,7 @@ int main() {
     struct func non_buff_io_func = {non_buff_io, "non_buff_io", "不带缓冲的IO：open read close......"};
     struct func std_io_func = {std_io, "std_io", "标准IO的实例"};
     struct func thread_prac1_func = {thread_prac1, "thread_prac1", "线程的创建 退出 连接 使用互斥量"};
+    struct func thread_prac2_rwlock_func = {thread_prac2_rwlock, "thread_prac2_rwlock", "线程：读写锁的实践"};
 
     struct func func_table[][MAX_FUNC_NUM] = {
             {exit_while},
@@ -44,13 +47,15 @@ int main() {
             {pointer_func},
             {non_buff_io_func},
             {std_io_func},
-            {thread_prac1_func}
+            {thread_prac1_func},
+            {thread_prac2_rwlock_func}
     };
 
 
     //以下不用修改
     //--------------------------------------------------------------
     while(1){
+        select_func:
         printf("函数列表如下：\n");//取名时函数名限制长度为20
 
         for(int i=0;i<sizeof(func_table)/sizeof(func_table[0]);i++){
@@ -83,4 +88,7 @@ int main() {
         while ((ch = getchar()) != '\n' && ch != EOF);//清空缓冲区的一般方法（最好方法）,以免影响等会的scanf
     }
 }
+
+
+
 
