@@ -6,6 +6,7 @@
 #include "header/std_io.h"
 #include "header/thread_prac1.h"
 #include "header/thread_prac2_rwlock.h"
+#include "header/thread_prac3_cond.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -24,8 +25,7 @@ int main() {
     //todo:要求函数必须是无参无返回值的
     /*
      struct func new={NULL,"exit","退出程序的运行"};
-     void non_buff_io()
-     void thread_prac2_rwlock()
+        thread_prac3_cond
      */
 
     struct func exit_while={NULL,"exit","退出程序的运行"};
@@ -38,6 +38,8 @@ int main() {
     struct func std_io_func = {std_io, "std_io", "标准IO的实例"};
     struct func thread_prac1_func = {thread_prac1, "thread_prac1", "线程的创建 退出 连接 线程清理程序（清除锁） 使用互斥量"};
     struct func thread_prac2_rwlock_func = {thread_prac2_rwlock, "thread_prac2_rwlock", "线程：读写锁的实践"};
+    struct func thread_prac3_cond_func = {thread_prac3_cond, "thread_prac3_cond", "条件变量——线程同步"};
+
 
     struct func func_table[][MAX_FUNC_NUM] = {
             {exit_while},
@@ -48,7 +50,8 @@ int main() {
             {non_buff_io_func},
             {std_io_func},
             {thread_prac1_func},
-            {thread_prac2_rwlock_func}
+            {thread_prac2_rwlock_func},
+            {thread_prac3_cond_func}
     };
 
 
