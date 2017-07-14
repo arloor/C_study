@@ -2,8 +2,8 @@
 // Created by arloor on 17-7-14.
 //
 
-#ifndef C_TEST_SEQLIST_H
-#define C_TEST_SEQLIST_H
+#ifndef C_STUDY_SEQLIST_ARRAY_H
+#define C_STUDY_SEQLIST_ARRAY_H
 //数据结构：顺序表——顺序存储
 #define MAXSIZE 100 //表空间最大为100
 typedef struct {
@@ -28,4 +28,4 @@ char getNode(SeqList *L, int i);
 //节点查询操作
 int getElem(SeqList *L, int x);
 
-#endif //C_TEST_SEQLIST_H
+#endif //C_STUDY_SEQLIST_ARRAY_H
